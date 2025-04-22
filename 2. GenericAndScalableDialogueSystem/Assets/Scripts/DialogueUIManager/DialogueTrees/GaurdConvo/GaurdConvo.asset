@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8375d55762f4b0441bf05201c8cbb99b, type: 3}
+  m_Name: GaurdConvo
+  m_EditorClassIdentifier: 
+  rootNode: {fileID: 11400000, guid: 9fb64ea4e7f76024c954c561be3c9ff4, type: 2}

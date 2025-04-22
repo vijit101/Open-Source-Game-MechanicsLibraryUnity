@@ -1,0 +1,16 @@
+/// <summary>
+/// Represents a choice in a dialogue node, linking to the next node in the dialogue tree.
+/// </summary>
+[System.Serializable]
+public class DialogueChoice
+{
+    /// <summary>
+    /// The text displayed for this choice.
+    /// </summary>
+    public string choiceText;
+
+    /// <summary>
+    /// The next dialogue node to go to if this choice is selected.
+    /// </summary>
+    public DialogueNode nextNode;
+}

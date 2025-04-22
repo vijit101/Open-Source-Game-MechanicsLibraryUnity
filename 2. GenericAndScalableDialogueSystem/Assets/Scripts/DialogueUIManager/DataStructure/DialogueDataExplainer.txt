@@ -1,0 +1,14 @@
+// Adds the ability to create a DialogueData ScriptableObject from the Unity Editor's 'Create' menu.
+// This helps in managing dialogue trees as reusable assets. 
+[CreateAssetMenu(fileName = "NewDialogueTree", menuName = "Dialogue System/Dialogue tree")]
+
+/// <summary>
+/// ScriptableObject representing a dialogue tree.
+/// </summary>
+public class DialogueData : ScriptableObject
+{
+    /// <summary>
+    /// The root node of the dialogue tree.
+    /// </summary>
+    public DialogueNode rootNode;
+}

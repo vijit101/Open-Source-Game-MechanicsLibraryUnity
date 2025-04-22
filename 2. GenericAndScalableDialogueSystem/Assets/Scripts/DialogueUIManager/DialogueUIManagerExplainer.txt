@@ -1,0 +1,139 @@
+/// <summary>
+/// Manages the dialogue UI, including displaying dialogue lines and player choices.
+/// </summary>
+public class DialogueUIManager : MonoBehaviour
+{
+    [Header("UI References")]
+    // Main dialogue panel UI element
+    public GameObject dialoguePanel;
+
+    // UI text for speaker name
+    public TextMeshProUGUI speakerText;
+
+    // UI text for dialogue content
+    public TextMeshProUGUI dialogueText;
+
+    // Container for choice buttons
+    public Transform choicePanel;
+
+    // Prefab for creating new choice buttons
+    public GameObject choiceButtonPrefab;
+
+    // List to keep track of current choice buttons
+    private List<GameObject> currentChoiceButtons = new List<GameObject>();
+
+    /// <summary>
+    /// Coroutine to automatically select the only choice after a delay.
+    /// </summary>
+    private IEnumerator AutoSelectOnlyChoice(string choiceText, System.Action<int> onChoiceSelected)
+    {
+        // Wait for 3 seconds before auto-selecting
+        yield return new WaitForSeconds(3.0f);
+
+        // Trigger the choice callback with index 0
+        onChoiceSelected?.Invoke(0);
+    }
+
+    /// <summary>
+    /// Initializes the dialogue panel on start.
+    /// </summary>
+    void Start()
+    {
+        // Hide dialogue panel initially
+        dialoguePanel.SetActive(false);
+    }
+
+    /// <summary>
+    /// Displays the dialogue line and corresponding player choices.
+    /// </summary>
+    public void ShowDialogue(string speaker, string text, List<string> choices, System.Action<int> onChoiceSelected, bool showEndButton)
+    {
+        // Show the dialogue panel
+        dialoguePanel.SetActive(true);
+
+        // Set speaker and dialogue texts
+        speakerText.text = speaker;
+        dialogueText.text = text;
+
+        // Clear previous choices
+        ClearChoices();
+
+        // Automatically select if there's only one choice
+        if (choices.Count == 1)
+        {
+            StartCoroutine(AutoSelectOnlyChoice(choices[0], onChoiceSelected));
+            return;
+        }
+
+        // Generate choice buttons for each choice
+        for (int i = 0; i < choices.Count; i++)
+        {
+            int choiceIndex = i;
+            GameObject choiceButtonObj = Instantiate(choiceButtonPrefab, choicePanel);
+            TextMeshProUGUI choiceText = choiceButtonObj.GetComponentInChildren<TextMeshProUGUI>();
+            choiceText.text = choices[i];
+
+            Button button = choiceButtonObj.GetComponent<Button>();
+            button.onClick.AddListener(() =>
+            {
+                onChoiceSelected?.Invoke(choiceIndex);
+            });
+
+            currentChoiceButtons.Add(choiceButtonObj);
+        }
+
+        // Show end button if flagged
+        if (showEndButton)
+        {
+            displayEndButton();
+        }
+    }
+
+    /// <summary>
+    /// Hides the dialogue panel and clears choices.
+    /// </summary>
+    public void HideDialogue()
+    {
+        // Deactivate dialogue panel
+        dialoguePanel.SetActive(false);
+
+        // Clear all choice buttons
+        ClearChoices();
+    }
+
+    /// <summary>
+    /// Destroys all current choice buttons.
+    /// </summary>
+    private void ClearChoices()
+    {
+        // Destroy each choice button
+        foreach (GameObject btn in currentChoiceButtons)
+        {
+            Destroy(btn);
+        }
+
+        // Clear the list
+        currentChoiceButtons.Clear();
+    }
+
+    /// <summary>
+    /// Creates and displays an end dialogue button.
+    /// </summary>
+    private void displayEndButton()
+    {
+        // Instantiate end button
+        GameObject endButtonObj = Instantiate(choiceButtonPrefab, choicePanel);
+        TextMeshProUGUI endText = endButtonObj.GetComponentInChildren<TextMeshProUGUI>();
+        endText.text = "Leave";
+
+        // Add click event to hide the dialogue
+        Button button = endButtonObj.GetComponent<Button>();
+        button.onClick.AddListener(() =>
+        {
+            HideDialogue();
+        });
+
+        // Add to choice button list
+        currentChoiceButtons.Add(endButtonObj);
+    }
+}
